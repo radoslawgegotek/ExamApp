@@ -20,7 +20,14 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
+    void on_questionBtn_clicked();
+
+    void on_examBtn_clicked();
+
+    void on_studentBtn_clicked();
+
+
+    void on_wczStudBtn_clicked();
 
 private:
     Ui::MainWindow *ui;

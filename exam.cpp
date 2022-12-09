@@ -38,12 +38,12 @@ void Exam::setFileStudents(const QString &newFileStudents)
     }
     m_fileStudents.close();
 
-//    for(Student &el : *m_students)
-//    {
-//        qDebug() << el.name() << ' ' << el.ID();
-//        for(int i = 0; i < el.getNotes().size(); i++)
-//            qDebug() << el.getNotes().at(i);
-//    }
+    for(Student &el : *m_students)
+    {
+        qDebug() << el.name() << ' ' << el.ID();
+        for(int i = 0; i < el.getNotes().size(); i++)
+            qDebug() << el.getNotes().at(i);
+    }
 }
 
 const QVector<Student> &Exam::students() const
