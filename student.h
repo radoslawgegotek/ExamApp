@@ -20,9 +20,15 @@ public:
     double getFinalGrade() const;
     void setFinalGrade(double newFinalGrade);
 
+    const QVector<double> &getNotes() const;
+
+    const QString &ID() const;
+    void setID(const QString &newID);
+
 private:
     QString m_name;
     QString m_surname;
+    QString m_ID;
     QVector<double> notes;
     double finalGrade;
 };

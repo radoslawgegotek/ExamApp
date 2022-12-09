@@ -4,7 +4,12 @@
 Exam::Exam(QObject *parent)
     : QObject{parent}
 {
+    m_students = new QVector<Student>;
+}
 
+Exam::~Exam()
+{
+    delete m_students;
 }
 
 void Exam::setFileStudents(const QString &newFileStudents)
@@ -23,17 +28,25 @@ void Exam::setFileStudents(const QString &newFileStudents)
             QString line = file.readLine();
             QStringList words = line.split(" ");
             Student s(words[0],words[1]);
+            s.setID(words[2]);
             for(int i = 3; i < words.size(); i++)
             {
                 s.addNotes(words[i].toDouble());
             }
-            m_students.append(s);
+            m_students->append(s);
         }
     }
     m_fileStudents.close();
+
+//    for(Student &el : *m_students)
+//    {
+//        qDebug() << el.name() << ' ' << el.ID();
+//        for(int i = 0; i < el.getNotes().size(); i++)
+//            qDebug() << el.getNotes().at(i);
+//    }
 }
 
 const QVector<Student> &Exam::students() const
 {
-    return m_students;
+    return *m_students;
 }

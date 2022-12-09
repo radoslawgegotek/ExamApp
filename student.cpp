@@ -39,3 +39,18 @@ void Student::setFinalGrade(double newFinalGrade)
 {
     finalGrade = newFinalGrade;
 }
+
+const QVector<double> &Student::getNotes() const
+{
+    return notes;
+}
+
+const QString &Student::ID() const
+{
+    return m_ID;
+}
+
+void Student::setID(const QString &newID)
+{
+    m_ID = newID;
+}

@@ -21,11 +21,11 @@ public:
     void updateStudents(const QString &fileName);
 
 signals:
-    void printStudents(QVector<Student> vecStud);
 
 private:
     MainWindow *gui = nullptr;
     Exam *mainExam = nullptr;
+    //Exam egzamin2;
 };
 
 #endif // APP_H
