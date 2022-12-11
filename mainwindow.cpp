@@ -9,6 +9,10 @@ MainWindow::MainWindow(QWidget *parent, App *app)
 {
     ui->setupUi(this);
     mainApp->setGUI(this);
+
+    connect(app,SIGNAL(showStudents(QVector<Student>)),this,SLOT(on_showStudents(QVector<Student>)));
+    connect(app,SIGNAL(showQuestions(QVector<QVector<QString>>)),this,SLOT(on_showQuestions(QVector<QVector<QString>>)));
+
 }
 
 MainWindow::~MainWindow()
@@ -43,3 +47,36 @@ void MainWindow::on_wczStudBtn_clicked()
     mainApp->updateStudents(fileName);
 }
 
+void MainWindow::on_showStudents(QVector<Student> students)
+{
+    ui->studList->clear();
+    for(Student &stud : students)
+    {
+        QString data = stud.name() + " " + stud.surname() + " " + stud.ID();
+        ui->studList->append(data);
+    }
+}
+
+void MainWindow::on_showQuestions(QVector<QVector<QString>> questions)
+{
+    ui->questionList->clear();
+
+    for(int i = 0; i < questions.size(); i++)
+    {
+        for(int j = 0; j < questions[i].size(); j++)
+        {
+            ui->questionList->append(questions[i][j]);
+        }
+    }
+
+}
+
+
+void MainWindow::on_wczPytBtn_clicked()
+{
+    QString fileName;
+    fileName = QFileDialog::getOpenFileName(this, tr("Wybierz plik z pytaniami"),
+                                                    "./",
+                                                    tr("Text (*.txt)"));
+    mainApp->updateQuestions(fileName);
+}

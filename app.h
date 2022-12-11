@@ -2,6 +2,7 @@
 #define APP_H
 
 #include <QObject>
+#include "student.h"
 
 class Exam;
 class Student;
@@ -19,13 +20,15 @@ public:
 
     //services methods
     void updateStudents(const QString &fileName);
+    void updateQuestions(const QString &fileName);
 
 signals:
+    void showStudents(QVector<Student>);
+    void showQuestions(QVector<QVector<QString>>);
 
 private:
     MainWindow *gui = nullptr;
     Exam *mainExam = nullptr;
-    //Exam egzamin2;
 };
 
 #endif // APP_H

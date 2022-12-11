@@ -3,9 +3,10 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
-
+#include "student.h"
 
 class App;
+class Student;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,14 +21,16 @@ public:
     ~MainWindow();
 
 private slots:
+    //sloty do kontrolek gui
     void on_questionBtn_clicked();
-
     void on_examBtn_clicked();
-
     void on_studentBtn_clicked();
-
-
     void on_wczStudBtn_clicked();
+
+    //sloty z klasa app
+    void on_showStudents(QVector<Student> students);
+    void on_showQuestions(QVector<QVector<QString>> questions);
+    void on_wczPytBtn_clicked();
 
 private:
     Ui::MainWindow *ui;

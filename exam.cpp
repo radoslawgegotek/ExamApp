@@ -1,25 +1,15 @@
 #include "exam.h"
-#include "student.h"
 
 Exam::Exam(QObject *parent)
     : QObject{parent}
 {
-    m_students = new QVector<Student>;
-}
-
-Exam::~Exam()
-{
-    delete m_students;
 }
 
 void Exam::setFileStudents(const QString &newFileStudents)
 {
     m_fileStudents.setFileName(newFileStudents);
 
-//    if(!m_fileStudents.open(QIODevice::ReadOnly)) {
-//        QMessageBox::information(0,"Read error",studentsData.errorString());
-//    }
-
+    m_students.clear();
     if(m_fileStudents.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream file(&m_fileStudents);
@@ -33,20 +23,49 @@ void Exam::setFileStudents(const QString &newFileStudents)
             {
                 s.addNotes(words[i].toDouble());
             }
-            m_students->append(s);
+            m_students.append(s);
         }
     }
     m_fileStudents.close();
-
-    for(Student &el : *m_students)
-    {
-        qDebug() << el.name() << ' ' << el.ID();
-        for(int i = 0; i < el.getNotes().size(); i++)
-            qDebug() << el.getNotes().at(i);
-    }
+//    for(Student &el : m_students)
+//    {
+//        qDebug() << el.name() << ' ' << el.ID();
+//        for(int i = 0; i < el.getNotes().size(); i++)
+//            qDebug() << el.getNotes().at(i);
+//    }
 }
 
 const QVector<Student> &Exam::students() const
 {
-    return *m_students;
+    return m_students;
+}
+
+void Exam::setFileQuestions(const QString &newFileQuestions)
+{
+    m_fileQuestions.setFileName(newFileQuestions);
+    m_questions.clear();
+
+    QVector<QString> temp;
+    if(m_fileQuestions.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream file(&m_fileQuestions);
+
+        while(!file.atEnd())
+        {
+            QString line = file.readLine();
+            if(line.toUpper() == "BLOK")
+            {
+                m_questions.append(temp);
+                temp.clear();
+                continue;
+            }
+            temp.append(line);
+        }
+    }
+    m_fileQuestions.close();
+}
+
+const QVector<QVector<QString>> &Exam::questions() const
+{
+    return m_questions;
 }

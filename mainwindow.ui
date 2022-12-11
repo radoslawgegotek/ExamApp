@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>709</width>
-    <height>431</height>
+    <width>699</width>
+    <height>473</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -433,16 +433,70 @@
             <widget class="QWidget" name="page_2">
              <layout class="QHBoxLayout" name="horizontalLayout_6">
               <item>
-               <widget class="QLabel" name="label_3">
-                <property name="font">
-                 <font>
-                  <pointsize>30</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>STUDENT LISt</string>
-                </property>
+               <widget class="QWidget" name="widget" native="true">
+                <layout class="QVBoxLayout" name="verticalLayout_8">
+                 <item alignment="Qt::AlignLeft">
+                  <widget class="QListWidget" name="studCheckList"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="updateList">
+                   <property name="font">
+                    <font>
+                     <pointsize>12</pointsize>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">	background-color: #2c313c;</string>
+                   </property>
+                   <property name="text">
+                    <string>Aktualizuj Liste</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="chooseStud">
+                   <property name="font">
+                    <font>
+                     <pointsize>12</pointsize>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">	background-color: #2c313c;</string>
+                   </property>
+                   <property name="text">
+                    <string>Wybierz Studenta</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QWidget" name="widget_2" native="true">
+                <layout class="QVBoxLayout" name="verticalLayout_9">
+                 <item>
+                  <widget class="QWidget" name="widget_3" native="true"/>
+                 </item>
+                 <item>
+                  <widget class="QWidget" name="widget_4" native="true">
+                   <widget class="QPushButton" name="runExam">
+                    <property name="geometry">
+                     <rect>
+                      <x>40</x>
+                      <y>150</y>
+                      <width>201</width>
+                      <height>24</height>
+                     </rect>
+                    </property>
+                    <property name="text">
+                     <string>Rozpcznij Egzamin</string>
+                    </property>
+                   </widget>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
