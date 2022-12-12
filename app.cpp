@@ -30,3 +30,11 @@ void App::updateQuestions(const QString &fileName)
     mainExam->setFileQuestions(fileName);
     emit showQuestions(mainExam->questions());
 }
+
+void App::chooseStudent(int number)
+{
+    mainExam->setStudentNumber(number);
+    emit showStudentss(mainExam->students());
+}
+
+

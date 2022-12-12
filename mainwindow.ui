@@ -450,21 +450,11 @@
                <widget class="QWidget" name="widget" native="true">
                 <layout class="QVBoxLayout" name="verticalLayout_8">
                  <item alignment="Qt::AlignLeft">
-                  <widget class="QListWidget" name="studCheckList"/>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="chooseStud">
+                  <widget class="QListWidget" name="studCheckList">
                    <property name="font">
                     <font>
                      <pointsize>12</pointsize>
-                     <bold>true</bold>
                     </font>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">	background-color: #2c313c;</string>
-                   </property>
-                   <property name="text">
-                    <string>Wybierz Studenta</string>
                    </property>
                   </widget>
                  </item>

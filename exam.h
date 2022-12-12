@@ -18,6 +18,7 @@ public:
     //ustawienie sciezek do plikow i pobranie zawartosci
     void setFileStudents(const QString &newFileStudents);
     void setFileQuestions(const QString &newFileQuestions);
+    void setStudentNumber(int n);
 
     //geter
     const QVector<Student> &students() const;
@@ -30,7 +31,7 @@ private:
     QFile m_fileStudents;
     QVector<Student> m_students;
     QVector<QVector<QString>> m_questions;
-
+    int m_studentNumber;
 };
 
 #endif // EXAM_H

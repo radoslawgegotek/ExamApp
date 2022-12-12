@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QListWidget>
 #include "student.h"
 
 class App;
@@ -26,13 +27,13 @@ private slots:
     void on_examBtn_clicked();
     void on_studentBtn_clicked();
     void on_wczStudBtn_clicked();
+    void on_wczPytBtn_clicked();
+    void on_studCheckList_itemDoubleClicked();
 
     //sloty z klasa app
     void on_showStudents(QVector<Student> students);
     void on_showQuestions(QVector<QVector<QString>> questions);
-    void on_wczPytBtn_clicked();
-
-    void on_updateList_clicked();
+    void on_showRating(QVector<Student> students);
 
 private:
     Ui::MainWindow *ui;

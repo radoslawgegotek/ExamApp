@@ -21,9 +21,10 @@ public:
     //services methods
     void updateStudents(const QString &fileName);
     void updateQuestions(const QString &fileName);
-
+    void chooseStudent(int number);
 signals:
     void showStudents(QVector<Student>);
+    void showStudentss(QVector<Student>);
     void showQuestions(QVector<QVector<QString>>);
 
 private:

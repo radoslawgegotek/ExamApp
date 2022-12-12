@@ -21,6 +21,7 @@ public:
     void setFinalGrade(double newFinalGrade);
 
     const QVector<double> &getNotes() const;
+    QString getRadius(int n);
 
     const QString &ID() const;
     void setID(const QString &newID);

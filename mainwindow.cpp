@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent, App *app)
 
     connect(app,SIGNAL(showStudents(QVector<Student>)),this,SLOT(on_showStudents(QVector<Student>)));
     connect(app,SIGNAL(showQuestions(QVector<QVector<QString>>)),this,SLOT(on_showQuestions(QVector<QVector<QString>>)));
-
+    connect(app,SIGNAL(showStudentss(QVector<Student>)),this,SLOT(on_showRating(QVector<Student>)));
 }
 
 MainWindow::~MainWindow()
@@ -77,6 +77,25 @@ void MainWindow::on_showQuestions(QVector<QVector<QString>> questions)
     }
 }
 
+void MainWindow::on_showRating(QVector<Student> students)
+{
+    int position= ui->studCheckList->currentRow();
+    ui->oc1Text->clear();
+    ui->oc2Text->clear();
+    ui->oc3Text->clear();
+    ui->oc4Text->clear();
+    ui->IdText->clear();
+    ui->surNamText->clear();
+    QString data = students[position].name() + " " + students[position].surname();
+    ui->surNamText->setText(data);
+    ui->IdText->setText(students[position].ID());
+
+
+    //QVector<double>::iterator n = students[position].getNotes();
+    ui->oc1Text->setText(students[position].getRadius(position));
+    ui->oc2Text->setText(students[position].getRadius(position));
+}
+
 
 void MainWindow::on_wczPytBtn_clicked()
 {
@@ -87,8 +106,8 @@ void MainWindow::on_wczPytBtn_clicked()
     mainApp->updateQuestions(fileName);
 }
 
-void MainWindow::on_updateList_clicked()
+void MainWindow::on_studCheckList_itemDoubleClicked()
 {
-
+    mainApp->chooseStudent(ui->studCheckList->currentRow());
 }
 

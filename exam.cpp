@@ -65,6 +65,11 @@ void Exam::setFileQuestions(const QString &newFileQuestions)
     m_fileQuestions.close();
 }
 
+void Exam::setStudentNumber(int n)
+{
+    m_studentNumber = n;
+}
+
 const QVector<QVector<QString>> &Exam::questions() const
 {
     return m_questions;
