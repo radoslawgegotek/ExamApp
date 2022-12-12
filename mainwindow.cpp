@@ -55,6 +55,13 @@ void MainWindow::on_showStudents(QVector<Student> students)
         QString data = stud.name() + " " + stud.surname() + " " + stud.ID();
         ui->studList->append(data);
     }
+
+    ui->studCheckList->clear();
+    for(Student &stud : students)
+    {
+        QString data = stud.name() + " " + stud.surname() + " " + stud.ID();
+        ui->studCheckList->addItem(data);
+    }
 }
 
 void MainWindow::on_showQuestions(QVector<QVector<QString>> questions)
@@ -68,7 +75,6 @@ void MainWindow::on_showQuestions(QVector<QVector<QString>> questions)
             ui->questionList->append(questions[i][j]);
         }
     }
-
 }
 
 
@@ -80,3 +86,9 @@ void MainWindow::on_wczPytBtn_clicked()
                                                     tr("Text (*.txt)"));
     mainApp->updateQuestions(fileName);
 }
+
+void MainWindow::on_updateList_clicked()
+{
+
+}
+

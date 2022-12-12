@@ -32,6 +32,8 @@ private slots:
     void on_showQuestions(QVector<QVector<QString>> questions);
     void on_wczPytBtn_clicked();
 
+    void on_updateList_clicked();
+
 private:
     Ui::MainWindow *ui;
     App *mainApp = nullptr;
