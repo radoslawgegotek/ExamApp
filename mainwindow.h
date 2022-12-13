@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QListWidget>
+#include "qlabel.h"
 #include "student.h"
 
 class App;
@@ -29,14 +30,20 @@ private slots:
     void on_wczStudBtn_clicked();
     void on_wczPytBtn_clicked();
     void on_studCheckList_itemDoubleClicked();
+    void on_startExam_clicked();
 
     //sloty z klasa app
     void on_showStudents(QVector<Student> students);
     void on_showQuestions(QVector<QVector<QString>> questions);
-    void on_showRating(QVector<Student> students);
+    void on_pickStudent(QVector<Student> students);
+    void on_examStart(QVector<Student> students, QVector<QVector<QString>> questions, int id);
+
 
 private:
     Ui::MainWindow *ui;
     App *mainApp = nullptr;
+
+    //lista QLabeli w mainwindow
+    QVector<QLabel*> listaBlokow;
 };
 #endif // MAINWINDOW_H

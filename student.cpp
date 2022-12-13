@@ -45,12 +45,6 @@ const QVector<double> &Student::getNotes() const
     return notes;
 }
 
-QString Student::getRadius(int n)
-{
-    //if(notes[n] != notes.end())
-     return QString::number(notes[n]);
-}
-
 const QString &Student::ID() const
 {
     return m_ID;

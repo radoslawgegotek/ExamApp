@@ -12,7 +12,8 @@ MainWindow::MainWindow(QWidget *parent, App *app)
 
     connect(app,SIGNAL(showStudents(QVector<Student>)),this,SLOT(on_showStudents(QVector<Student>)));
     connect(app,SIGNAL(showQuestions(QVector<QVector<QString>>)),this,SLOT(on_showQuestions(QVector<QVector<QString>>)));
-    connect(app,SIGNAL(showStudentss(QVector<Student>)),this,SLOT(on_showRating(QVector<Student>)));
+    connect(app,SIGNAL(pickStudent(QVector<Student>)),this,SLOT(on_pickStudent(QVector<Student>)));
+    connect(app,SIGNAL(setupExam(QVector<Student>, QVector<QVector<QString>>, int)),this,SLOT(on_examStart(QVector<Student>, QVector<QVector<QString>>, int)));
 }
 
 MainWindow::~MainWindow()
@@ -77,13 +78,16 @@ void MainWindow::on_showQuestions(QVector<QVector<QString>> questions)
     }
 }
 
-void MainWindow::on_showRating(QVector<Student> students)
+void MainWindow::on_pickStudent(QVector<Student> students)
 {
-    int position= ui->studCheckList->currentRow();
-    ui->oc1Text->clear();
-    ui->oc2Text->clear();
-    ui->oc3Text->clear();
-    ui->oc4Text->clear();
+    int position = ui->studCheckList->currentRow();
+
+    for(QLabel* item : listaBlokow)
+    {
+        delete item;
+    }
+    listaBlokow.clear();
+
     ui->IdText->clear();
     ui->surNamText->clear();
     QString data = students[position].name() + " " + students[position].surname();
@@ -91,11 +95,29 @@ void MainWindow::on_showRating(QVector<Student> students)
     ui->IdText->setText(students[position].ID());
 
 
-    //QVector<double>::iterator n = students[position].getNotes();
-    ui->oc1Text->setText(students[position].getRadius(position));
-    ui->oc2Text->setText(students[position].getRadius(position));
+    //wypisanie ocen z labolatorium w zakladce student
+    QLabel* blokInfo;
+    QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->labsGrades->layout());
+    for(int i = 0; i < students[position].getNotes().size(); i++)
+    {
+        QString blokText = tr("lab.%1 \t").arg(layout->count() + 1);
+        blokText.append(QString::number(students[position].getNotes()[i]));
+        blokInfo = new QLabel(ui->labsGrades);
+        blokInfo->setText(blokText);
+        layout->insertWidget(0, blokInfo);
+        listaBlokow.append(blokInfo);
+    }
 }
 
+void MainWindow::on_examStart(QVector<Student> students, QVector<QVector<QString>> questions, int id)
+{
+    ui->IdText_2->clear();
+    ui->surNamText_2->clear();
+    QString data = students[id].name() + " " + students[id].surname();
+    ui->surNamText_2->setText(data);
+    ui->IdText_2->setText(students[id].ID());
+    ui->showQue->append(questions[0][0]);
+}
 
 void MainWindow::on_wczPytBtn_clicked()
 {
@@ -108,6 +130,13 @@ void MainWindow::on_wczPytBtn_clicked()
 
 void MainWindow::on_studCheckList_itemDoubleClicked()
 {
-    mainApp->chooseStudent(ui->studCheckList->currentRow());
+    mainApp->updateStudExamID(ui->studCheckList->currentRow());
+}
+
+
+void MainWindow::on_startExam_clicked()
+{
+    mainApp->updateExam();
+    ui->stackedWidget->setCurrentWidget(ui->page);
 }
 

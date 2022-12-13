@@ -46,31 +46,51 @@ void Exam::setFileQuestions(const QString &newFileQuestions)
     m_questions.clear();
 
     QVector<QString> temp;
+    QString line;
+    QString check;
+    int countLine = 0;
     if(m_fileQuestions.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QTextStream file(&m_fileQuestions);
 
         while(!file.atEnd())
         {
-            QString line = file.readLine();
-            if(line.toUpper() == "BLOK")
+            if(countLine == 3)
+            {
+                temp.append(line);
+                line.clear();
+                countLine = 0;
+            }
+
+            check = file.readLine();
+            if(check == "BLOK")
             {
                 m_questions.append(temp);
                 temp.clear();
+                line.clear();
+                check.clear();
+                countLine = 0;
                 continue;
             }
-            temp.append(line);
+            line = line + check;
+            check.clear();
+            countLine++;
         }
     }
     m_fileQuestions.close();
 }
 
-void Exam::setStudentNumber(int n)
+void Exam::setStudExamID(int n)
 {
-    m_studentNumber = n;
+    m_StudExamID = n;
 }
 
 const QVector<QVector<QString>> &Exam::questions() const
 {
     return m_questions;
+}
+
+int Exam::StudExamID() const
+{
+    return m_StudExamID;
 }

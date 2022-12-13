@@ -21,7 +21,6 @@ public:
     void setFinalGrade(double newFinalGrade);
 
     const QVector<double> &getNotes() const;
-    QString getRadius(int n);
 
     const QString &ID() const;
     void setID(const QString &newID);
@@ -31,6 +30,7 @@ private:
     QString m_surname;
     QString m_ID;
     QVector<double> notes;
+    QVector<double> examNotes;
     double finalGrade;
 };
 

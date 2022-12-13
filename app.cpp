@@ -31,10 +31,14 @@ void App::updateQuestions(const QString &fileName)
     emit showQuestions(mainExam->questions());
 }
 
-void App::chooseStudent(int number)
+void App::updateStudExamID(int number)
 {
-    mainExam->setStudentNumber(number);
-    emit showStudentss(mainExam->students());
+    mainExam->setStudExamID(number);
+    emit pickStudent(mainExam->students());
 }
 
+void App::updateExam()
+{
+    emit setupExam(mainExam->students(),mainExam->questions(),mainExam->StudExamID());
+}
 

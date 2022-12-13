@@ -21,11 +21,14 @@ public:
     //services methods
     void updateStudents(const QString &fileName);
     void updateQuestions(const QString &fileName);
-    void chooseStudent(int number);
+    void updateStudExamID(int number);
+    void updateExam();
+
 signals:
     void showStudents(QVector<Student>);
-    void showStudentss(QVector<Student>);
+    void pickStudent(QVector<Student>);
     void showQuestions(QVector<QVector<QString>>);
+    void setupExam(QVector<Student> students, QVector<QVector<QString>> questions, int id);
 
 private:
     MainWindow *gui = nullptr;
