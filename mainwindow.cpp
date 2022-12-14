@@ -115,6 +115,7 @@ void MainWindow::on_pickStudent(QVector<Student> students)
 
 void MainWindow::on_examStart(QVector<Student> students, int blokNum, int id)
 {
+    ui->blokCB->clear();
     ui->IdText_2->clear();
     ui->surNamText_2->clear();
     QString data = students[id].name() + " " + students[id].surname();
