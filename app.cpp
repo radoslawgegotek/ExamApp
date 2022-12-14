@@ -39,6 +39,16 @@ void App::updateStudExamID(int number)
 
 void App::updateExam()
 {
-    emit setupExam(mainExam->students(),mainExam->questions(),mainExam->StudExamID());
+    emit setupExam(mainExam->students(),mainExam->blokNumber(),mainExam->StudExamID());
+}
+
+void App::updateDraw()
+{
+    emit drawedQuestions(mainExam->drawQuestions());
+}
+
+void App::updateNoteFromBlok(int blok, double note)
+{
+    mainExam->addBlokNote(blok, note);
 }
 

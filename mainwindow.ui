@@ -610,7 +610,15 @@
                       <property name="frameShadow">
                        <enum>QFrame::Raised</enum>
                       </property>
-                      <layout class="QHBoxLayout" name="horizontalLayout_15"/>
+                      <layout class="QHBoxLayout" name="horizontalLayout_15">
+                       <item>
+                        <widget class="QPushButton" name="drawQuestionsBTN">
+                         <property name="text">
+                          <string>Losuj pytania</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
                      </widget>
                     </item>
                    </layout>
@@ -671,7 +679,7 @@
                            </widget>
                           </item>
                           <item>
-                           <widget class="QComboBox" name="ocenaCB">
+                           <widget class="QComboBox" name="noteCB">
                             <property name="styleSheet">
                              <string notr="true">	background-color: #2c313c;</string>
                             </property>
@@ -717,7 +725,7 @@
                            </widget>
                           </item>
                           <item>
-                           <widget class="QComboBox" name="comboBox_2">
+                           <widget class="QComboBox" name="blokCB">
                             <property name="styleSheet">
                              <string notr="true">	background-color: #2c313c;</string>
                             </property>
@@ -754,7 +762,7 @@
                         <number>0</number>
                        </property>
                        <item>
-                        <widget class="QPushButton" name="pushButton_6">
+                        <widget class="QPushButton" name="saveNoteFromBlokBTN">
                          <property name="font">
                           <font>
                            <pointsize>12</pointsize>

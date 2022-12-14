@@ -10,10 +10,13 @@ MainWindow::MainWindow(QWidget *parent, App *app)
     ui->setupUi(this);
     mainApp->setGUI(this);
 
+    ui->noteCB->addItems({ "2", "3", "3.5", "4", "4.5", "5" });
+
     connect(app,SIGNAL(showStudents(QVector<Student>)),this,SLOT(on_showStudents(QVector<Student>)));
     connect(app,SIGNAL(showQuestions(QVector<QVector<QString>>)),this,SLOT(on_showQuestions(QVector<QVector<QString>>)));
     connect(app,SIGNAL(pickStudent(QVector<Student>)),this,SLOT(on_pickStudent(QVector<Student>)));
-    connect(app,SIGNAL(setupExam(QVector<Student>, QVector<QVector<QString>>, int)),this,SLOT(on_examStart(QVector<Student>, QVector<QVector<QString>>, int)));
+    connect(app,SIGNAL(setupExam(QVector<Student>, int, int)),this,SLOT(on_examStart(QVector<Student>, int, int)));
+    connect(app,SIGNAL(drawedQuestions(QStringList)),this,SLOT(on_drawedQuestions(QStringList)));
 }
 
 MainWindow::~MainWindow()
@@ -98,6 +101,7 @@ void MainWindow::on_pickStudent(QVector<Student> students)
     //wypisanie ocen z labolatorium w zakladce student
     QLabel* blokInfo;
     QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->labsGrades->layout());
+
     for(int i = 0; i < students[position].getNotes().size(); i++)
     {
         QString blokText = tr("lab.%1 \t").arg(layout->count() + 1);
@@ -109,14 +113,28 @@ void MainWindow::on_pickStudent(QVector<Student> students)
     }
 }
 
-void MainWindow::on_examStart(QVector<Student> students, QVector<QVector<QString>> questions, int id)
+void MainWindow::on_examStart(QVector<Student> students, int blokNum, int id)
 {
     ui->IdText_2->clear();
     ui->surNamText_2->clear();
     QString data = students[id].name() + " " + students[id].surname();
     ui->surNamText_2->setText(data);
     ui->IdText_2->setText(students[id].ID());
-    ui->showQue->append(questions[0][0]);
+
+    for(int i = 0; i < blokNum; i++)
+    {
+        ui->blokCB->addItem(QString::number(i + 1));
+    }
+}
+
+void MainWindow::on_drawedQuestions(QStringList list)
+{
+    ui->showQue->clear();
+    for(QString &que : list)
+    {
+        ui->showQue->append(que);
+        ui->showQue->append("\n");
+    }
 }
 
 void MainWindow::on_wczPytBtn_clicked()
@@ -140,3 +158,14 @@ void MainWindow::on_startExam_clicked()
     ui->stackedWidget->setCurrentWidget(ui->page);
 }
 
+
+void MainWindow::on_drawQuestionsBTN_clicked()
+{
+    mainApp->updateDraw();
+}
+
+
+void MainWindow::on_saveNoteFromBlokBTN_clicked()
+{
+    mainApp->updateNoteFromBlok(ui->blokCB->currentText().toInt(),ui->noteCB->currentText().toDouble());
+}

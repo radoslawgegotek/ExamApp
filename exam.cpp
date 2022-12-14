@@ -1,4 +1,5 @@
 #include "exam.h"
+#include "random"
 
 Exam::Exam(QObject *parent)
     : QObject{parent}
@@ -70,6 +71,7 @@ void Exam::setFileQuestions(const QString &newFileQuestions)
                 line.clear();
                 check.clear();
                 countLine = 0;
+                m_blokNumber++;
                 continue;
             }
             line = line + check;
@@ -85,6 +87,28 @@ void Exam::setStudExamID(int n)
     m_StudExamID = n;
 }
 
+void Exam::addBlokNote(int blok, double note)
+{
+    m_students[m_StudExamID].addBlokNote(blok, note);
+}
+
+QStringList Exam::drawQuestions()
+{
+    QStringList list;
+
+    std::random_device seed; std::mt19937 rngGen;
+    rngGen.seed(seed());
+    //std::uniform_int_distribution<int> rngQueNum(a, b);
+
+    for(int i = 0; i < m_questions.size(); i++)
+    {
+        std::uniform_int_distribution<int> rngQueNum(0, m_questions[i].size() - 1);
+        list.append(m_questions[i][rngQueNum(rngGen)]);
+    }
+
+    return list;
+}
+
 const QVector<QVector<QString>> &Exam::questions() const
 {
     return m_questions;
@@ -93,4 +117,9 @@ const QVector<QVector<QString>> &Exam::questions() const
 int Exam::StudExamID() const
 {
     return m_StudExamID;
+}
+
+int Exam::blokNumber() const
+{
+    return m_blokNumber;
 }

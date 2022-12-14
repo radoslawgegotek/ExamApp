@@ -3,12 +3,14 @@
 
 #include <QString>
 #include <QVector>
+#include <QMap>
 
 class Student
 {
 public:
     Student(QString& name, QString& surname);
 
+    void addBlokNote(int blok, double note);
     void addNotes(double note);
 
     const QString &name() const;
@@ -30,7 +32,7 @@ private:
     QString m_surname;
     QString m_ID;
     QVector<double> notes;
-    QVector<double> examNotes;
+    QMap<int, double> examNotes;
     double finalGrade;
 };
 

@@ -1,8 +1,19 @@
 #include "student.h"
+#include "qdebug.h"
 
 Student::Student(QString &name, QString &surname)
     :m_name(name), m_surname(surname)
 {
+}
+
+void Student::addBlokNote(int blok, double note)
+{
+    examNotes.insert(blok, note);
+
+    for(auto &item : examNotes.keys())
+    {
+        qDebug() << "Blok " << item << "," << examNotes.value(item);
+    }
 }
 
 void Student::addNotes(double note)

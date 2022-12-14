@@ -31,12 +31,16 @@ private slots:
     void on_wczPytBtn_clicked();
     void on_studCheckList_itemDoubleClicked();
     void on_startExam_clicked();
+    void on_drawQuestionsBTN_clicked();
+    void on_saveNoteFromBlokBTN_clicked();
 
     //sloty z klasa app
     void on_showStudents(QVector<Student> students);
     void on_showQuestions(QVector<QVector<QString>> questions);
     void on_pickStudent(QVector<Student> students);
-    void on_examStart(QVector<Student> students, QVector<QVector<QString>> questions, int id);
+    void on_examStart(QVector<Student> students, int blokNum, int id);
+    void on_drawedQuestions(QStringList list);
+
 
 
 private:

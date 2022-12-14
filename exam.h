@@ -18,13 +18,21 @@ public:
     //ustawienie sciezek do plikow i pobranie zawartosci
     void setFileStudents(const QString &newFileStudents);
     void setFileQuestions(const QString &newFileQuestions);
+
     void setStudExamID(int n);
+
+    //dodanie oceny z bloku
+    void addBlokNote(int, double);
+
+    //losowanie pytan
+    QStringList drawQuestions();
 
     //geter
     const QVector<Student> &students() const;
     const QVector<QVector<QString>> &questions() const;
 
     int StudExamID() const;
+    int blokNumber() const;
 
 signals:
 
@@ -34,6 +42,7 @@ private:
     QVector<Student> m_students;
     QVector<QVector<QString>> m_questions;
     int m_StudExamID;
+    int m_blokNumber = 0;
 };
 
 #endif // EXAM_H

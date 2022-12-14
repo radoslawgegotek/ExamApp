@@ -23,12 +23,15 @@ public:
     void updateQuestions(const QString &fileName);
     void updateStudExamID(int number);
     void updateExam();
+    void updateDraw();
+    void updateNoteFromBlok(int blok, double note);
 
 signals:
     void showStudents(QVector<Student>);
     void pickStudent(QVector<Student>);
     void showQuestions(QVector<QVector<QString>>);
-    void setupExam(QVector<Student> students, QVector<QVector<QString>> questions, int id);
+    void setupExam(QVector<Student> students, int blokNum, int id);
+    void drawedQuestions(QStringList queList);
 
 private:
     MainWindow *gui = nullptr;
