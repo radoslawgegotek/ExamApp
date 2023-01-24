@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QListWidget>
+#include <QMessageBox>
 #include "qlabel.h"
 #include "student.h"
 
@@ -42,6 +43,8 @@ private slots:
     void on_drawedQuestions(QStringList list);
 
 
+
+    void on_endExamBTN_clicked();
 
 private:
     Ui::MainWindow *ui;

@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <QtXml>
 #include "student.h"
 
 class Student;
@@ -23,6 +24,9 @@ public:
 
     //dodanie oceny z bloku
     void addBlokNote(int, double);
+
+    //przygotowanie danych do startu egzaminu, wystawia ocene 5 jesli student ma ocene z lab >= 5.5
+    void prepareStudentData();
 
     //losowanie pytan
     QStringList drawQuestions();

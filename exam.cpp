@@ -8,32 +8,42 @@ Exam::Exam(QObject *parent)
 
 void Exam::setFileStudents(const QString &newFileStudents)
 {
-    m_fileStudents.setFileName(newFileStudents);
+    QFileInfo file(newFileStudents);
 
-    m_students.clear();
-    if(m_fileStudents.open(QIODevice::ReadOnly | QIODevice::Text))
+    if(file.isFile() && file.exists())
     {
-        QTextStream file(&m_fileStudents);
-        while(!file.atEnd())
+        m_fileStudents.setFileName(newFileStudents);
+        m_students.clear();
+
+        QDomDocument document;
+
+        if(m_fileStudents.open(QIODevice::ReadOnly | QIODevice::Text))
         {
-            QString line = file.readLine();
-            QStringList words = line.split(" ");
-            Student s(words[0],words[1]);
-            s.setID(words[2]);
-            for(int i = 3; i < words.size(); i++)
+            if(document.setContent(&m_fileStudents))
             {
-                s.addNotes(words[i].toDouble());
+                QDomElement root = document.firstChildElement();
+                QDomNodeList studentsXml = root.elementsByTagName("Student");
+
+                for(int i = 0; i < studentsXml.size(); i++)
+                {
+                    QDomElement student = studentsXml.at(i).toElement();
+                    QString name = student.attribute("Imie");
+                    QString surname = student.attribute("Nazwisko");
+                    QStringList labNotes = student.attribute("Oceny").split(" ");
+
+                    Student stud(name, surname);
+                    stud.setID(student.attribute("Album"));
+
+                    for(int i = 0; i < labNotes.size(); i++)
+                    {
+                        stud.addNotes(labNotes[i].toDouble());
+                    }
+                    m_students.append(stud);
+                }
             }
-            m_students.append(s);
         }
     }
     m_fileStudents.close();
-//    for(Student &el : m_students)
-//    {
-//        qDebug() << el.name() << ' ' << el.ID();
-//        for(int i = 0; i < el.getNotes().size(); i++)
-//            qDebug() << el.getNotes().at(i);
-//    }
 }
 
 const QVector<Student> &Exam::students() const
@@ -43,42 +53,38 @@ const QVector<Student> &Exam::students() const
 
 void Exam::setFileQuestions(const QString &newFileQuestions)
 {
-    m_fileQuestions.setFileName(newFileQuestions);
-    m_questions.clear();
+    QFileInfo file(newFileQuestions);
 
-    QVector<QString> temp;
-    QString line;
-    QString check;
-    int countLine = 0;
-    if(m_fileQuestions.open(QIODevice::ReadOnly | QIODevice::Text))
+    if(file.isFile() && file.exists())
     {
-        QTextStream file(&m_fileQuestions);
+        m_fileQuestions.setFileName(newFileQuestions);
+        QDomDocument document;
+        QVector<QString> temp;
 
-        while(!file.atEnd())
+        if(m_fileQuestions.open(QIODevice::ReadOnly | QIODevice::Text))
         {
-            if(countLine == 3)
+            if(document.setContent(&m_fileQuestions))
             {
-                temp.append(line);
-                line.clear();
-                countLine = 0;
-            }
+                QDomElement root = document.firstChildElement();
+                QDomNodeList bloki = root.elementsByTagName("Blok");
 
-            check = file.readLine();
-            if(check == "BLOK")
-            {
-                m_questions.append(temp);
-                temp.clear();
-                line.clear();
-                check.clear();
-                countLine = 0;
-                m_blokNumber++;
-                continue;
+                for(int i = 0; i < bloki.size(); i++)
+                {
+                    QDomElement blok = bloki.at(i).toElement();
+                    QDomNodeList pytania = blok.elementsByTagName("Pytanie");
+
+                    for(int i = 0; i < pytania.size(); i++)
+                    {
+                        QDomElement que = pytania.at(i).toElement();
+                        temp.append(que.attribute("Text"));
+                    }
+                    m_questions.append(temp);
+                    temp.clear();
+                }
             }
-            line = line + check;
-            check.clear();
-            countLine++;
         }
     }
+    m_blokNumber = m_questions.size();
     m_fileQuestions.close();
 }
 
@@ -90,6 +96,17 @@ void Exam::setStudExamID(int n)
 void Exam::addBlokNote(int blok, double note)
 {
     m_students[m_StudExamID].addBlokNote(blok, note);
+}
+
+void Exam::prepareStudentData()
+{
+    for(int i = 0; i < m_students[m_StudExamID].getNotes().size(); i++)
+    {
+        if(m_students[m_StudExamID].getNotes()[i] >= 5.5)
+        {
+           m_students[m_StudExamID].addBlokNote(i + 1, 5);
+        }
+    }
 }
 
 QStringList Exam::drawQuestions()

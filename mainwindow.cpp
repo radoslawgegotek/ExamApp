@@ -47,7 +47,7 @@ void MainWindow::on_wczStudBtn_clicked()
     QString fileName;
     fileName = QFileDialog::getOpenFileName(this, tr("Wybierz plik ze Studentami"),
                                                     "./",
-                                                    tr("Text (*.txt)"));
+                                                    tr("Text (*.xml)"));
     mainApp->updateStudents(fileName);
 }
 
@@ -143,7 +143,7 @@ void MainWindow::on_wczPytBtn_clicked()
     QString fileName;
     fileName = QFileDialog::getOpenFileName(this, tr("Wybierz plik z pytaniami"),
                                                     "./",
-                                                    tr("Text (*.txt)"));
+                                                    tr("Text (*.xml)"));
     mainApp->updateQuestions(fileName);
 }
 
@@ -170,3 +170,18 @@ void MainWindow::on_saveNoteFromBlokBTN_clicked()
 {
     mainApp->updateNoteFromBlok(ui->blokCB->currentText().toInt(),ui->noteCB->currentText().toDouble());
 }
+
+void MainWindow::on_endExamBTN_clicked()
+{
+    bool saveNotesAndFinishExam;
+    saveNotesAndFinishExam = QMessageBox::question(this, "Zapisz i zakończ", "Zapisać oceny i zakończyć?",
+                                                   QMessageBox::Yes, QMessageBox::No);
+
+    if(saveNotesAndFinishExam)
+    {
+        //zapis wynikow do tablicy/vec/list
+
+    }
+
+}
+

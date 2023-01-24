@@ -39,6 +39,7 @@ void App::updateStudExamID(int number)
 
 void App::updateExam()
 {
+    mainExam->prepareStudentData();
     emit setupExam(mainExam->students(),mainExam->blokNumber(),mainExam->StudExamID());
 }
 

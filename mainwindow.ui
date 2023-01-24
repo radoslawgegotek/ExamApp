@@ -261,6 +261,13 @@
             </property>
            </spacer>
           </item>
+          <item>
+           <widget class="QPushButton" name="pobierzRapotyBTN">
+            <property name="text">
+             <string>Pobierz raport</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -826,7 +833,11 @@
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_22">
                     <item>
-                     <widget class="QTextEdit" name="showQue"/>
+                     <widget class="QTextEdit" name="showQue">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
                     </item>
                    </layout>
                   </widget>
@@ -844,7 +855,7 @@
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_14">
                  <item>
-                  <widget class="QLabel" name="label_8">
+                  <widget class="QLabel" name="finalNoteText">
                    <property name="font">
                     <font>
                      <pointsize>12</pointsize>
@@ -857,14 +868,14 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_9">
+                  <widget class="QLabel" name="finalNoteInfo">
                    <property name="text">
                     <string/>
                    </property>
                   </widget>
                  </item>
                  <item alignment="Qt::AlignRight|Qt::AlignBottom">
-                  <widget class="QPushButton" name="pushButton_5">
+                  <widget class="QPushButton" name="endExamBTN">
                    <property name="minimumSize">
                     <size>
                      <width>250</width>
