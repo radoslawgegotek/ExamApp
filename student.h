@@ -27,6 +27,8 @@ public:
     const QString &ID() const;
     void setID(const QString &newID);
 
+    const QMap<int, double> &getExamNotes() const;
+
 private:
     QString m_name;
     QString m_surname;

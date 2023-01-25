@@ -31,6 +31,9 @@ public:
     //losowanie pytan
     QStringList drawQuestions();
 
+    //zapisanie raportu
+    void saveRaport();
+
     //geter
     const QVector<Student> &students() const;
     const QVector<QVector<QString>> &questions() const;
@@ -47,6 +50,9 @@ private:
     QVector<QVector<QString>> m_questions;
     int m_StudExamID;
     int m_blokNumber = 0;
+
+    //obliczenie oceny koncowej
+    void calculateFinal(int i);
 };
 
 #endif // EXAM_H

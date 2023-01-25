@@ -5,6 +5,8 @@
 #include <QFileDialog>
 #include <QListWidget>
 #include <QMessageBox>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 #include "qlabel.h"
 #include "student.h"
 
@@ -22,6 +24,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr, App *app = nullptr);
     ~MainWindow();
+
+    //styl
+    void setExamPageDefault();
 
 private slots:
     //sloty do kontrolek gui
@@ -43,14 +48,23 @@ private slots:
     void on_drawedQuestions(QStringList list);
 
 
-
     void on_endExamBTN_clicked();
+    void on_pobierzRapotyBTN_clicked();
+
+    void on_printExamNotes(QVector<Student> students, int id);
+
+
 
 private:
     Ui::MainWindow *ui;
     App *mainApp = nullptr;
 
     //lista QLabeli w mainwindow
-    QVector<QLabel*> listaBlokow;
+    QList<QLabel*> qLabelsLabsNotes;
+    QVBoxLayout* layoutLabNotes;
+
+    //QLabeli w zakładce przeprowadzającej egzamin
+    QList<QLabel*> qLabelsExamNotes;
+    QHBoxLayout* layoutExamNotes;
 };
 #endif // MAINWINDOW_H

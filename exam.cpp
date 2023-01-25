@@ -40,6 +40,7 @@ void Exam::setFileStudents(const QString &newFileStudents)
                     }
                     m_students.append(stud);
                 }
+                prepareStudentData();
             }
         }
     }
@@ -96,16 +97,21 @@ void Exam::setStudExamID(int n)
 void Exam::addBlokNote(int blok, double note)
 {
     m_students[m_StudExamID].addBlokNote(blok, note);
+    calculateFinal(m_StudExamID);
 }
 
 void Exam::prepareStudentData()
 {
-    for(int i = 0; i < m_students[m_StudExamID].getNotes().size(); i++)
+    for(int i = 0; i < m_students.size(); i++)
     {
-        if(m_students[m_StudExamID].getNotes()[i] >= 5.5)
+        for(int j = 0; j < m_students[i].getNotes().size(); j++)
         {
-           m_students[m_StudExamID].addBlokNote(i + 1, 5);
+            if(m_students[i].getNotes()[j] >= 5.5)
+            {
+               m_students[i].addBlokNote(j + 1, 5);
+            }
         }
+        calculateFinal(i);
     }
 }
 
@@ -126,6 +132,59 @@ QStringList Exam::drawQuestions()
     return list;
 }
 
+void Exam::saveRaport()
+{
+    QDomDocument document;
+    QDomElement root = document.createElement("Wyniki");
+    document.appendChild(root);
+
+    for(Student& s : m_students)
+    {
+        QDomElement student = document.createElement("Student");
+        student.setAttribute("Imie", s.name());
+        student.setAttribute("Nazwisko", s.surname());
+        student.setAttribute("Album", s.ID());
+
+        //zapisanie ocen czastkowych
+        QString partNotes;
+        for(int i = 0; i < s.getExamNotes().size(); i++)
+        {
+            partNotes = partNotes + QString::number(s.getExamNotes()[i + 1]) + " ";
+        }
+        student.setAttribute("OcenyCząstkowe", partNotes);
+
+        //zapisanie oceny koncowej
+        if(s.getExamNotes().size() == m_blokNumber)
+        {
+            for(auto it = s.getExamNotes().begin(); it != s.getExamNotes().end(); it++)
+            {
+                if(it.value() == 2)
+                {
+                    student.setAttribute("OcenaKońcowa", "Nie zaliczono");
+                    break;
+                }
+                else
+                    student.setAttribute("OcenaKońcowa", s.getFinalGrade());
+            }
+        }
+        else
+        {
+            student.setAttribute("OcenaKońcowa", "Nie zaliczono");
+        }
+
+        root.appendChild(student);
+    }
+
+
+    QFile writeResults("wyniki.xml");
+    if(writeResults.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QTextStream content(&writeResults);
+        content << document.toString();
+    }
+    writeResults.close();
+}
+
 const QVector<QVector<QString>> &Exam::questions() const
 {
     return m_questions;
@@ -139,4 +198,17 @@ int Exam::StudExamID() const
 int Exam::blokNumber() const
 {
     return m_blokNumber;
+}
+
+void Exam::calculateFinal(int i)
+{
+    double sum = 0;
+    if(m_students[i].getExamNotes().size() == m_blokNumber)
+    {
+        for(int &key : m_students[i].getExamNotes().keys())
+        {
+            sum += m_students[i].getExamNotes().value(key);
+        }
+        m_students[i].setFinalGrade(sum/m_blokNumber);
+    }
 }

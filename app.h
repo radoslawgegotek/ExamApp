@@ -21,16 +21,18 @@ public:
     //services methods
     void updateStudents(const QString &fileName);
     void updateQuestions(const QString &fileName);
-    void updateStudExamID(int number);
-    void updateExam();
+    void switchCurrentStudent();
+    void updateExam(int number);
     void updateDraw();
     void updateNoteFromBlok(int blok, double note);
+    void saveRaport();
 
 signals:
     void showStudents(QVector<Student>);
     void pickStudent(QVector<Student>);
     void showQuestions(QVector<QVector<QString>>);
     void setupExam(QVector<Student> students, int blokNum, int id);
+    void printExamNotes(QVector<Student>, int id);
     void drawedQuestions(QStringList queList);
 
 private:

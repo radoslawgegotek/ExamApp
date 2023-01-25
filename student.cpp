@@ -9,11 +9,6 @@ Student::Student(QString &name, QString &surname)
 void Student::addBlokNote(int blok, double note)
 {
     examNotes.insert(blok, note);
-
-    for(auto &item : examNotes.keys())
-    {
-        qDebug() << "Blok " << item << "," << examNotes.value(item);
-    }
 }
 
 void Student::addNotes(double note)
@@ -64,4 +59,9 @@ const QString &Student::ID() const
 void Student::setID(const QString &newID)
 {
     m_ID = newID;
+}
+
+const QMap<int, double> &Student::getExamNotes() const
+{
+    return examNotes;
 }

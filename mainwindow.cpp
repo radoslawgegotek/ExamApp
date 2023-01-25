@@ -12,15 +12,36 @@ MainWindow::MainWindow(QWidget *parent, App *app)
 
     ui->noteCB->addItems({ "2", "3", "3.5", "4", "4.5", "5" });
 
+    layoutLabNotes = qobject_cast<QVBoxLayout*>(ui->labsGrades->layout());
+    layoutExamNotes = qobject_cast<QHBoxLayout*>(ui->examGrades->layout());
+
+
+    ///USTAWIENIA GUI
+    ui->startExam->setEnabled(false);
+    ui->examBtn->setEnabled(false);
+
     connect(app,SIGNAL(showStudents(QVector<Student>)),this,SLOT(on_showStudents(QVector<Student>)));
     connect(app,SIGNAL(showQuestions(QVector<QVector<QString>>)),this,SLOT(on_showQuestions(QVector<QVector<QString>>)));
     connect(app,SIGNAL(pickStudent(QVector<Student>)),this,SLOT(on_pickStudent(QVector<Student>)));
     connect(app,SIGNAL(setupExam(QVector<Student>, int, int)),this,SLOT(on_examStart(QVector<Student>, int, int)));
     connect(app,SIGNAL(drawedQuestions(QStringList)),this,SLOT(on_drawedQuestions(QStringList)));
+    connect(app,SIGNAL(printExamNotes(QVector<Student>, int)),this,SLOT(on_printExamNotes(QVector<Student>, int)));
 }
 
 MainWindow::~MainWindow()
 {
+    for(QLabel* item : qLabelsExamNotes)
+    {
+        delete item;
+    }
+
+    for(QLabel* item : qLabelsLabsNotes)
+    {
+        delete item;
+    }
+
+    delete layoutExamNotes;
+    delete layoutLabNotes;
     delete ui;
 }
 
@@ -85,11 +106,12 @@ void MainWindow::on_pickStudent(QVector<Student> students)
 {
     int position = ui->studCheckList->currentRow();
 
-    for(QLabel* item : listaBlokow)
+    //usuniecie poprzednio wypisanych ocen
+    for(QLabel* item : qLabelsLabsNotes)
     {
         delete item;
     }
-    listaBlokow.clear();
+    qLabelsLabsNotes.clear();
 
     ui->IdText->clear();
     ui->surNamText->clear();
@@ -99,22 +121,23 @@ void MainWindow::on_pickStudent(QVector<Student> students)
 
 
     //wypisanie ocen z labolatorium w zakladce student
-    QLabel* blokInfo;
-    QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->labsGrades->layout());
+    QLabel* labInfo;
 
     for(int i = 0; i < students[position].getNotes().size(); i++)
     {
-        QString blokText = tr("lab.%1 \t").arg(layout->count() + 1);
+        QString blokText = tr("lab.%1 \t").arg(layoutLabNotes->count() + 1);
         blokText.append(QString::number(students[position].getNotes()[i]));
-        blokInfo = new QLabel(ui->labsGrades);
-        blokInfo->setText(blokText);
-        layout->insertWidget(0, blokInfo);
-        listaBlokow.append(blokInfo);
+        labInfo = new QLabel(ui->labsGrades);
+        labInfo->setText(blokText);
+        layoutLabNotes->insertWidget(0, labInfo);
+        qLabelsLabsNotes.append(labInfo);
     }
 }
 
 void MainWindow::on_examStart(QVector<Student> students, int blokNum, int id)
 {
+    //w tym miejscu slotem dopisuja sie oceny z egzaminu jesli jest zaliczenie po lab
+
     ui->blokCB->clear();
     ui->IdText_2->clear();
     ui->surNamText_2->clear();
@@ -124,8 +147,14 @@ void MainWindow::on_examStart(QVector<Student> students, int blokNum, int id)
 
     for(int i = 0; i < blokNum; i++)
     {
+        if(students[id].getNotes()[i] >= 5.5)
+            continue;
         ui->blokCB->addItem(QString::number(i + 1));
     }
+//    for(int i = 0; i < blokNum; i++)
+//    {
+//        ui->blokCB->addItem(QString::number(i + 1));
+//    }
 }
 
 void MainWindow::on_drawedQuestions(QStringList list)
@@ -149,14 +178,17 @@ void MainWindow::on_wczPytBtn_clicked()
 
 void MainWindow::on_studCheckList_itemDoubleClicked()
 {
-    mainApp->updateStudExamID(ui->studCheckList->currentRow());
+    mainApp->switchCurrentStudent();
+    ui->startExam->setEnabled(true);
 }
 
 
 void MainWindow::on_startExam_clicked()
 {
-    mainApp->updateExam();
+    mainApp->updateExam(ui->studCheckList->currentRow());
     ui->stackedWidget->setCurrentWidget(ui->page);
+    ui->startExam->setEnabled(false);
+    ui->examBtn->setEnabled(true);
 }
 
 
@@ -174,14 +206,65 @@ void MainWindow::on_saveNoteFromBlokBTN_clicked()
 void MainWindow::on_endExamBTN_clicked()
 {
     bool saveNotesAndFinishExam;
-    saveNotesAndFinishExam = QMessageBox::question(this, "Zapisz i zakończ", "Zapisać oceny i zakończyć?",
+    saveNotesAndFinishExam = QMessageBox::question(this, "Zakończyć?", "Jeśli nie wszystkie oceny zostały wystawione student otrzyma ocenę niedostateczną",
                                                    QMessageBox::Yes, QMessageBox::No);
 
     if(saveNotesAndFinishExam)
     {
-        //zapis wynikow do tablicy/vec/list
-
+        setExamPageDefault();
+        ui->stackedWidget->setCurrentWidget(ui->page_2);
+        ui->studCheckList->reset();
+        ui->startExam->setEnabled(false);
+        ui->examBtn->setEnabled(false);
     }
 
+}
+
+
+void MainWindow::on_pobierzRapotyBTN_clicked()
+{
+    mainApp->saveRaport();
+}
+
+void MainWindow::on_printExamNotes(QVector<Student> students, int id)
+{
+    for(QLabel* item : qLabelsExamNotes)
+    {
+        delete item;
+    }
+    qLabelsExamNotes.clear();
+
+    QLabel* examGradesInfo;
+
+    for(int &item : students[id].getExamNotes().keys())
+    {
+        QString labelText = tr("Ocena z bloku %1 \t").arg(item);
+        labelText.append(QString::number(students[id].getExamNotes().value(item)));
+        examGradesInfo = new QLabel(ui->examGrades);
+        examGradesInfo->setText(labelText);
+        layoutExamNotes->insertWidget(0,examGradesInfo);
+        qLabelsExamNotes.append(examGradesInfo);
+    }
+
+
+    //Do dokonczenia
+    if((students[id].getFinalGrade()) > 0)
+    {
+        ui->finalNoteInfo->setText(QString::number(students[id].getFinalGrade()));
+    }
+    else
+        ui->finalNoteInfo->setText("Brak");
+}
+
+void MainWindow::setExamPageDefault()
+{
+    ui->surNamText_2->clear();
+    ui->IdText_2->clear();
+    ui->showQue->clear();
+    for(QLabel* item : qLabelsExamNotes)
+    {
+        delete item;
+    }
+    qLabelsExamNotes.clear();
 }
 

@@ -31,16 +31,20 @@ void App::updateQuestions(const QString &fileName)
     emit showQuestions(mainExam->questions());
 }
 
-void App::updateStudExamID(int number)
+void App::switchCurrentStudent()
 {
-    mainExam->setStudExamID(number);
+    //wcześniej tutaj przekazywany był akt. index listy stud do klasy exam
+    //-->jakby był błąd to tu sprawdzić
+    //mainExam->setStudExamID(number);
     emit pickStudent(mainExam->students());
 }
 
-void App::updateExam()
+void App::updateExam(int number)
 {
+    mainExam->setStudExamID(number);
     mainExam->prepareStudentData();
     emit setupExam(mainExam->students(),mainExam->blokNumber(),mainExam->StudExamID());
+    emit printExamNotes(mainExam->students(), mainExam->StudExamID());
 }
 
 void App::updateDraw()
@@ -51,5 +55,11 @@ void App::updateDraw()
 void App::updateNoteFromBlok(int blok, double note)
 {
     mainExam->addBlokNote(blok, note);
+    emit printExamNotes(mainExam->students(), mainExam->StudExamID());
+}
+
+void App::saveRaport()
+{
+    mainExam->saveRaport();
 }
 
