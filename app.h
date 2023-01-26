@@ -26,6 +26,7 @@ public:
     void updateDraw();
     void updateNoteFromBlok(int blok, double note);
     void saveRaport();
+    QString updateInfoAboutFinalGrade();
 
 signals:
     void showStudents(QVector<Student>);

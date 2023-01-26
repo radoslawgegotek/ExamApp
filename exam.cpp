@@ -213,6 +213,22 @@ void Exam::saveRaport()
     writeResults.close();
 }
 
+QString Exam::getInfoAboutFinalGrade()
+{
+    for(int key : m_students[m_StudExamID].getExamNotes().keys())
+        {
+            if(m_students[m_StudExamID].getExamNotes().value(key) == 2)
+            {
+                return "Brak zaliczenia";
+            }
+        }
+
+        if(m_students[m_StudExamID].getExamNotes().size() == m_blokNumber)
+            return QString::number(m_students[m_StudExamID].getFinalGrade());
+        else
+            return "Brak zaliczenia";
+}
+
 const QVector<QVector<QString>> &Exam::questions() const
 {
     return m_questions;

@@ -34,6 +34,9 @@ public:
     //zapisanie raportu
     void saveRaport();
 
+    //zwraca info o ocenie końcowej
+    QString getInfoAboutFinalGrade();
+
     //geter
     const QVector<Student> &students() const;
     const QVector<QVector<QString>> &questions() const;

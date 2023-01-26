@@ -190,6 +190,7 @@ void MainWindow::on_startExam_clicked()
     ui->stackedWidget->setCurrentWidget(ui->page);
     ui->startExam->setEnabled(false);
     ui->examBtn->setEnabled(true);
+    ui->showQue->clear();
 }
 
 
@@ -201,7 +202,8 @@ void MainWindow::on_drawQuestionsBTN_clicked()
 
 void MainWindow::on_saveNoteFromBlokBTN_clicked()
 {
-    mainApp->updateNoteFromBlok(ui->blokCB->currentText().toInt(),ui->noteCB->currentText().toDouble());
+    if(!(ui->blokCB->currentText().isEmpty()))
+        mainApp->updateNoteFromBlok(ui->blokCB->currentText().toInt(),ui->noteCB->currentText().toDouble());
 }
 
 void MainWindow::on_endExamBTN_clicked()
@@ -250,13 +252,8 @@ void MainWindow::on_printExamNotes(QVector<Student> students, int id)
     }
 
 
-    //Do dokonczenia
-    if((students[id].getFinalGrade()) > 0)
-    {
-        ui->finalNoteInfo->setText(QString::number(students[id].getFinalGrade()));
-    }
-    else
-        ui->finalNoteInfo->setText("Brak");
+    //wypisuje ocene koncowa
+        ui->finalNoteInfo->setText(mainApp->updateInfoAboutFinalGrade());
 }
 
 void MainWindow::setExamPageDefault()

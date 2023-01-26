@@ -63,3 +63,8 @@ void App::saveRaport()
     mainExam->saveRaport();
 }
 
+QString App::updateInfoAboutFinalGrade()
+{
+    return mainExam->getInfoAboutFinalGrade();
+}
+

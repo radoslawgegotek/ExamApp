@@ -385,8 +385,8 @@ QPushButton:hover {
                 <string>Raport</string>
                </property>
                <property name="icon">
-                <iconset>
-                 <normaloff>../../proejkt 24/projekt-cichosz_gegotek-main/feather/file-text.svg</normaloff>../../proejkt 24/projekt-cichosz_gegotek-main/feather/file-text.svg</iconset>
+                <iconset resource="icon.qrc">
+                 <normaloff>:/new/prefix1/feather/file-text.svg</normaloff>:/new/prefix1/feather/file-text.svg</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -495,7 +495,7 @@ QPushButton:hover {
              <string notr="true">	background-color: rgb(31, 35, 42);</string>
             </property>
             <property name="currentIndex">
-             <number>2</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="page">
              <layout class="QVBoxLayout" name="verticalLayout_15">
