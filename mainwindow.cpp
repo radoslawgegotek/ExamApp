@@ -19,12 +19,13 @@ MainWindow::MainWindow(QWidget *parent, App *app)
     ///USTAWIENIA GUI
     ui->startExam->setEnabled(false);
     ui->examBtn->setEnabled(false);
+    ui->stackedWidget->setCurrentWidget(ui->page_3);
 
     connect(app,SIGNAL(showStudents(QVector<Student>)),this,SLOT(on_showStudents(QVector<Student>)));
     connect(app,SIGNAL(showQuestions(QVector<QVector<QString>>)),this,SLOT(on_showQuestions(QVector<QVector<QString>>)));
     connect(app,SIGNAL(pickStudent(QVector<Student>)),this,SLOT(on_pickStudent(QVector<Student>)));
     connect(app,SIGNAL(setupExam(QVector<Student>, int, int)),this,SLOT(on_examStart(QVector<Student>, int, int)));
-    connect(app,SIGNAL(drawedQuestions(QStringList)),this,SLOT(on_drawedQuestions(QStringList)));
+    connect(app,SIGNAL(drawedQuestions(QVector<QString>)),this,SLOT(on_drawedQuestions(QVector<QString>)));
     connect(app,SIGNAL(printExamNotes(QVector<Student>, int)),this,SLOT(on_printExamNotes(QVector<Student>, int)));
 }
 
@@ -125,7 +126,7 @@ void MainWindow::on_pickStudent(QVector<Student> students)
 
     for(int i = 0; i < students[position].getNotes().size(); i++)
     {
-        QString blokText = tr("lab.%1 \t").arg(layoutLabNotes->count() + 1);
+        QString blokText = tr("Lab: %1 \t").arg(layoutLabNotes->count() + 1);
         blokText.append(QString::number(students[position].getNotes()[i]));
         labInfo = new QLabel(ui->labsGrades);
         labInfo->setText(blokText);
@@ -157,7 +158,7 @@ void MainWindow::on_examStart(QVector<Student> students, int blokNum, int id)
 //    }
 }
 
-void MainWindow::on_drawedQuestions(QStringList list)
+void MainWindow::on_drawedQuestions(QVector<QString> list)
 {
     ui->showQue->clear();
     for(QString &que : list)
@@ -224,6 +225,7 @@ void MainWindow::on_endExamBTN_clicked()
 void MainWindow::on_pobierzRapotyBTN_clicked()
 {
     mainApp->saveRaport();
+    QMessageBox::information(this, "Raport","Wyniki egzaminu zostały zapisane do pliku!");
 }
 
 void MainWindow::on_printExamNotes(QVector<Student> students, int id)
@@ -238,8 +240,9 @@ void MainWindow::on_printExamNotes(QVector<Student> students, int id)
 
     for(int &item : students[id].getExamNotes().keys())
     {
-        QString labelText = tr("Ocena z bloku %1 \t").arg(item);
-        labelText.append(QString::number(students[id].getExamNotes().value(item)));
+        QString labelText = tr("Ocena z bloku %1: ").arg(item);
+        QString ocena = QString("<span style=\" color:#ff0000;\">%1</span>").arg(QString::number(students[id].getExamNotes().value(item)));
+        labelText.append(ocena);
         examGradesInfo = new QLabel(ui->examGrades);
         examGradesInfo->setText(labelText);
         layoutExamNotes->insertWidget(0,examGradesInfo);

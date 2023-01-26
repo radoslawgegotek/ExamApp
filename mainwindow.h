@@ -45,7 +45,7 @@ private slots:
     void on_showQuestions(QVector<QVector<QString>> questions);
     void on_pickStudent(QVector<Student> students);
     void on_examStart(QVector<Student> students, int blokNum, int id);
-    void on_drawedQuestions(QStringList list);
+    void on_drawedQuestions(QVector<QString> list);
 
 
     void on_endExamBTN_clicked();

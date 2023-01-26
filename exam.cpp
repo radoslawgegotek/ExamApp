@@ -117,16 +117,44 @@ void Exam::prepareStudentData()
 
 QStringList Exam::drawQuestions()
 {
-    QStringList list;
-
+    QVector<QString> list;
     std::random_device seed; std::mt19937 rngGen;
     rngGen.seed(seed());
-    //std::uniform_int_distribution<int> rngQueNum(a, b);
+    int x, y, z;
 
     for(int i = 0; i < m_questions.size(); i++)
     {
+        QString blok = QString("<span style=\" color:#ff0000; font-weight:400; font-size:18px;\">BLOK %1:</span>").arg(i + 1);
+        //QString a ="--------------------------------- BLOK: " + QString::number(i + 1) + " ---------------------------------";
+        list.append(blok);
         std::uniform_int_distribution<int> rngQueNum(0, m_questions[i].size() - 1);
-        list.append(m_questions[i][rngQueNum(rngGen)]);
+        if(m_students[m_StudExamID].getNotes()[i] < 3.5){
+            list.append(m_questions[i][rngQueNum(rngGen)]);
+        }
+        else if(m_students[m_StudExamID].getNotes()[i] < 4.5){
+            x = rngQueNum(rngGen);
+            list.append(m_questions[i][x]);
+            do{
+                y = rngQueNum(rngGen);
+            }while(x == y);
+            list.append(m_questions[i][y]);
+        }
+        else if(m_students[m_StudExamID].getNotes()[i] < 5.5){
+            x = rngQueNum(rngGen);
+            list.append(m_questions[i][x]);
+            do{
+                y = rngQueNum(rngGen);
+            }while(x == y);
+            list.append(m_questions[i][y]);
+            do{
+                z = rngQueNum(rngGen);
+            }while(x == z || z == y);
+            list.append(m_questions[i][z]);
+        }
+        else{
+            list.append("BLOK ZALICZONY");
+            addBlokNote(i, 5);
+        }
     }
 
     return list;

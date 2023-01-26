@@ -287,5 +287,6 @@
         <file>feather/zap-off.svg</file>
         <file>feather/zoom-in.svg</file>
         <file>feather/zoom-out.svg</file>
+        <file>feather/logo.qrc</file>
     </qresource>
 </RCC>
