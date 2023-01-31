@@ -7,6 +7,9 @@
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QCloseEvent>
+#include <QDropEvent>
+#include <QMimeData>
 #include "qlabel.h"
 #include "student.h"
 
@@ -46,14 +49,11 @@ private slots:
     void on_pickStudent(QVector<Student> students);
     void on_examStart(QVector<Student> students, int blokNum, int id);
     void on_drawedQuestions(QVector<QString> list);
-
-
     void on_endExamBTN_clicked();
     void on_pobierzRapotyBTN_clicked();
-
     void on_printExamNotes(QVector<Student> students, int id);
 
-
+    void closeEvent(QCloseEvent* event) override;
 
 private:
     Ui::MainWindow *ui;

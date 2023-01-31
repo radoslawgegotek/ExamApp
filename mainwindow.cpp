@@ -20,6 +20,9 @@ MainWindow::MainWindow(QWidget *parent, App *app)
     ui->startExam->setEnabled(false);
     ui->examBtn->setEnabled(false);
     ui->stackedWidget->setCurrentWidget(ui->page_3);
+    setAcceptDrops(true);
+    ui->wczPytBtn->setAcceptDrops(true);
+    ui->wczStudBtn->setAcceptDrops(true);
 
     connect(app,SIGNAL(showStudents(QVector<Student>)),this,SLOT(on_showStudents(QVector<Student>)));
     connect(app,SIGNAL(showQuestions(QVector<QVector<QString>>)),this,SLOT(on_showQuestions(QVector<QVector<QString>>)));
@@ -146,6 +149,7 @@ void MainWindow::on_examStart(QVector<Student> students, int blokNum, int id)
     ui->surNamText_2->setText(data);
     ui->IdText_2->setText(students[id].ID());
 
+    //jesli jest zaliczenie po lab nie można nadpisac oceny
     for(int i = 0; i < blokNum; i++)
     {
         if(students[id].getNotes()[i] >= 5.5)
@@ -202,17 +206,17 @@ void MainWindow::on_drawQuestionsBTN_clicked()
 
 void MainWindow::on_saveNoteFromBlokBTN_clicked()
 {
-    if(!(ui->blokCB->currentText().isEmpty()))
+    if(!(ui->blokCB->currentText().isEmpty()) && ui->blokCB->currentText() != "")
         mainApp->updateNoteFromBlok(ui->blokCB->currentText().toInt(),ui->noteCB->currentText().toDouble());
 }
 
 void MainWindow::on_endExamBTN_clicked()
 {
-    bool saveNotesAndFinishExam;
-    saveNotesAndFinishExam = QMessageBox::question(this, "Zakończyć?", "Jeśli nie wszystkie oceny zostały wystawione student otrzyma ocenę niedostateczną",
+    int saveNotesAndFinishExam = QMessageBox::question(this, "Zakończyć?", "Jeśli nie wszystkie oceny zostały wystawione student otrzyma ocenę niedostateczną."
+                                                                           "Kontynuuować?",
                                                    QMessageBox::Yes, QMessageBox::No);
-
-    if(saveNotesAndFinishExam)
+    //qInfo() << saveNotesAndFinishExam;
+    if(saveNotesAndFinishExam == QMessageBox::Yes)
     {
         setExamPageDefault();
         ui->stackedWidget->setCurrentWidget(ui->page_2);
@@ -251,10 +255,24 @@ void MainWindow::on_printExamNotes(QVector<Student> students, int id)
         qLabelsExamNotes.append(examGradesInfo);
     }
 
-
     //wypisuje ocene koncowa
-        ui->finalNoteInfo->setText(mainApp->updateInfoAboutFinalGrade());
+    ui->finalNoteInfo->setText(mainApp->updateInfoAboutFinalGrade());
 }
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    int response = QMessageBox::question(this, "Zamknąć program?", "Studentom którym nie wystawiono ocen "
+                                                                   "otrzymają oceny niedostateczne. Kontynuuować?",
+                                                       QMessageBox::Yes, QMessageBox::No);
+    if(response == QMessageBox::Yes)
+    {
+        mainApp->saveRaport();
+        event->accept();
+    }
+    else
+        event->ignore();
+}
+
 
 void MainWindow::setExamPageDefault()
 {
@@ -267,4 +285,3 @@ void MainWindow::setExamPageDefault()
     }
     qLabelsExamNotes.clear();
 }
-

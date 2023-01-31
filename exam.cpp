@@ -153,10 +153,8 @@ QStringList Exam::drawQuestions()
         }
         else{
             list.append("BLOK ZALICZONY");
-            addBlokNote(i, 5);
         }
     }
-
     return list;
 }
 

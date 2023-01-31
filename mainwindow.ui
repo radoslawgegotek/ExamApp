@@ -495,7 +495,7 @@ QPushButton:hover {
              <string notr="true">	background-color: rgb(31, 35, 42);</string>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="page">
              <layout class="QVBoxLayout" name="verticalLayout_15">
@@ -799,6 +799,11 @@ QPushButton:hover {
                           </item>
                           <item>
                            <widget class="QComboBox" name="noteCB">
+                            <property name="font">
+                             <font>
+                              <pointsize>12</pointsize>
+                             </font>
+                            </property>
                             <property name="styleSheet">
                              <string notr="true">	background-color: #2c313c;</string>
                             </property>
@@ -845,6 +850,11 @@ QPushButton:hover {
                           </item>
                           <item>
                            <widget class="QComboBox" name="blokCB">
+                            <property name="font">
+                             <font>
+                              <pointsize>12</pointsize>
+                             </font>
+                            </property>
                             <property name="styleSheet">
                              <string notr="true">	background-color: #2c313c;</string>
                             </property>
