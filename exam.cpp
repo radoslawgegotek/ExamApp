@@ -8,6 +8,8 @@ Exam::Exam(QObject *parent)
 
 void Exam::setFileStudents(const QString &newFileStudents)
 {
+    m_students.clear();
+
     QFileInfo file(newFileStudents);
 
     if(file.isFile() && file.exists())
@@ -54,6 +56,9 @@ const QVector<Student> &Exam::students() const
 
 void Exam::setFileQuestions(const QString &newFileQuestions)
 {
+    m_blokNumber = 0;
+    m_questions.clear();
+
     QFileInfo file(newFileQuestions);
 
     if(file.isFile() && file.exists())
@@ -71,13 +76,31 @@ void Exam::setFileQuestions(const QString &newFileQuestions)
 
                 for(int i = 0; i < bloki.size(); i++)
                 {
-                    QDomElement blok = bloki.at(i).toElement();
-                    QDomNodeList pytania = blok.elementsByTagName("Pytanie");
+                    QDomElement component = bloki.at(i).firstChild().toElement();
 
-                    for(int i = 0; i < pytania.size(); i++)
+                    while(!component.isNull())
                     {
-                        QDomElement que = pytania.at(i).toElement();
-                        temp.append(que.attribute("Text"));
+                        QString pytanie;
+                        if(component.tagName() == "Pytanie")
+                        {
+                            pytanie = component.attribute("temat");
+                            QDomElement child = component.firstChild().toElement();
+
+                            while(!child.isNull())
+                            {
+                                if (child.tagName()=="Podstawowe") {
+                                    QString podst = QString("<span style=\" color: #ff0000;\">%1</span>").arg(child.firstChild().toText().data());
+                                    pytanie = pytanie + " " + podst;
+                                }
+                                if (child.tagName()=="Dodatkowe") {
+                                    QString dodat = QString("<span style=\" color: #00ff00;\">%1</span>").arg(child.firstChild().toText().data());
+                                    pytanie = pytanie + " " + dodat;
+                                }
+                                child = child.nextSibling().toElement();
+                            }
+                        }
+                        temp.append(pytanie);
+                        component = component.nextSibling().toElement();
                     }
                     m_questions.append(temp);
                     temp.clear();
@@ -161,46 +184,69 @@ QStringList Exam::drawQuestions()
 void Exam::saveRaport()
 {
     QDomDocument document;
+    document.appendChild(document.createProcessingInstruction("xml-stylesheet", "href=\"styl.css\" type=\"text/css\""));
+
     QDomElement root = document.createElement("Wyniki");
     document.appendChild(root);
 
     for(Student& s : m_students)
     {
         QDomElement student = document.createElement("Student");
-        student.setAttribute("Imie", s.name());
-        student.setAttribute("Nazwisko", s.surname());
-        student.setAttribute("Album", s.ID());
+
+        QDomElement imie = document.createElement("Imie");
+        QDomText imieText = document.createTextNode(s.name());
+        imie.appendChild(imieText);
+        student.appendChild(imie);
+
+        QDomElement nazwisko = document.createElement("Nazwisko");
+        QDomText nazwiskoText = document.createTextNode(s.surname());
+        nazwisko.appendChild(nazwiskoText);
+        student.appendChild(nazwisko);
+
+        QDomElement album = document.createElement("Album");
+        QDomText albumText = document.createTextNode(s.ID());
+        album.appendChild(albumText);
+        student.appendChild(album);
+
 
         //zapisanie ocen czastkowych
         QString partNotes;
-        for(int i = 0; i < s.getExamNotes().size(); i++)
+        for(auto it = s.getExamNotes().begin(); it != s.getExamNotes().end(); it++)
         {
-            partNotes = partNotes + QString::number(s.getExamNotes()[i + 1]) + " ";
+            partNotes.append(" ");
+            partNotes.append(QString::number(it.value()));
         }
-        student.setAttribute("OcenyCząstkowe", partNotes);
+
+        QDomElement ocenyCzastkowe = document.createElement("OcenyCzastkowe");
+        QDomText ocenyCzastkoweText = document.createTextNode(partNotes);
+        ocenyCzastkowe.appendChild(ocenyCzastkoweText);
+        student.appendChild(ocenyCzastkowe);
 
         //zapisanie oceny koncowej
+        QDomElement ocenaKoncowa = document.createElement("OcenaKońcowa");
+        QDomText ocenaKoncowaNEG = document.createTextNode("Nie zaliczono");
+        QDomText niePrzeprowadzono = document.createTextNode("Nie wystawiono wszystkich ocen");
+        QDomText ocenaKoncowaWartosc = document.createTextNode(QString::number(s.getFinalGrade()));
         if(s.getExamNotes().size() == m_blokNumber)
         {
             for(auto it = s.getExamNotes().begin(); it != s.getExamNotes().end(); it++)
             {
                 if(it.value() == 2)
                 {
-                    student.setAttribute("OcenaKońcowa", "Nie zaliczono");
+                    ocenaKoncowa.appendChild(ocenaKoncowaNEG);
                     break;
                 }
                 else
-                    student.setAttribute("OcenaKońcowa", s.getFinalGrade());
+                    ocenaKoncowa.appendChild(ocenaKoncowaWartosc);
             }
         }
         else
         {
-            student.setAttribute("OcenaKońcowa", "Nie zaliczono");
+            ocenaKoncowa.appendChild(niePrzeprowadzono);
         }
-
+        student.appendChild(ocenaKoncowa);
         root.appendChild(student);
     }
-
 
     QFile writeResults("wyniki.xml");
     if(writeResults.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -210,6 +256,7 @@ void Exam::saveRaport()
     }
     writeResults.close();
 }
+
 
 QString Exam::getInfoAboutFinalGrade()
 {
